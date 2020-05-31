@@ -14,21 +14,11 @@ const MultiStepForm: React.FC<IMultiStepForm> = ({ input, handleChange }) => {
   const jsx = useMemo(() => {
     let jsx = [];
     for (let key in input) {
-      let { title, placeholder, type, required, description } = input[key];
-      let formControl = (
-        <>
-          <Form.Control
-            type={type}
-            placeholder={placeholder}
-            required={!!required}
-            onChange={handleChange ? handleChange(key) : () => {}}
-          />
-
-          {!!description ? (
-            <Form.Text className="text-muted">{description}</Form.Text>
-          ) : undefined}
-        </>
-      );
+      let { title, placeholder, type, required, description, group } = input[
+        key
+      ];
+      let formControl;
+      let groupFormControl;
       switch (type) {
         case 'tel':
           formControl = (
@@ -56,6 +46,31 @@ const MultiStepForm: React.FC<IMultiStepForm> = ({ input, handleChange }) => {
             />
           );
           break;
+        case 'checkbox':
+          formControl = (
+            <Form.Check
+              type={type}
+              id={key}
+              label={description}
+              onChange={handleChange ? handleChange(key) : () => {}}
+            />
+          );
+          break;
+        default:
+          formControl = (
+            <>
+              <Form.Control
+                type={type}
+                placeholder={placeholder}
+                required={!!required}
+                onChange={handleChange ? handleChange(key) : () => {}}
+              />
+
+              {!!description ? (
+                <Form.Text className="text-muted">{description}</Form.Text>
+              ) : undefined}
+            </>
+          );
       }
       jsx.push(
         <Form.Group controlId={key} key={key}>
