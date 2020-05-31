@@ -14,11 +14,10 @@ const MultiStepForm: React.FC<IMultiStepForm> = ({ input, handleChange }) => {
   const jsx = useMemo(() => {
     let jsx = [];
     for (let key in input) {
-      let { title, placeholder, type, required, description, group } = input[
+      let { title, placeholder, type, required, description, parent } = input[
         key
       ];
       let formControl;
-      let groupFormControl;
       switch (type) {
         case 'tel':
           formControl = (
@@ -72,15 +71,32 @@ const MultiStepForm: React.FC<IMultiStepForm> = ({ input, handleChange }) => {
             </>
           );
       }
-      jsx.push(
-        <Form.Group controlId={key} key={key}>
-          {!!title ? <Form.Label>{title}</Form.Label> : undefined}
-          {formControl}
-        </Form.Group>,
-      );
+      if (!!parent) {
+        let indexParent: number = jsx.findIndex((item) => {
+          return item.key === parent;
+        });
+
+        let children = [...jsx[indexParent].props.children];
+
+        children.push(formControl);
+        jsx[indexParent] = (
+          <Form.Group controlId={key} key={key}>
+            {!!title ? <Form.Label>{title}</Form.Label> : undefined}
+            {children.map((item) => item)}
+          </Form.Group>
+        );
+      } else {
+        jsx.push(
+          <Form.Group controlId={key} key={key}>
+            {!!title ? <Form.Label>{title}</Form.Label> : undefined}
+            {formControl}
+          </Form.Group>,
+        );
+      }
     }
     return jsx;
   }, [input]);
+  console.log(jsx);
   return <>{jsx.map((item) => item)}</>;
 };
 

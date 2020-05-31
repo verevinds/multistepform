@@ -16,12 +16,11 @@ function App() {
             title: 'Проверка на бота',
             type: 'switch',
             description: 'Вы человек?',
-            group: 'bot',
           },
           swi: {
             type: 'switch',
             description: 'Вы программист?',
-            group: 'bot',
+            parent: 'tch',
           },
           checkbox: {
             title: 'Ваш любимый цвет',
